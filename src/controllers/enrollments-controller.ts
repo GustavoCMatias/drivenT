@@ -1,4 +1,3 @@
-import { ReqAdress } from '@prisma/client';
 import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
@@ -30,18 +29,14 @@ export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, re
 }
 
 export async function getAddressFromCEP(req: AuthenticatedRequest, res: Response) {
-  const cep = req.query.cep?.toString();
-  if (cep.length !== 8) return res.sendStatus(httpStatus.NO_CONTENT);
+  const { cep } = req.query as Record<string, string>;
+
   try {
-    const address: ReqAdress = await enrollmentsService.getAddressFromCEP(cep);
+    const address = await enrollmentsService.getAddressFromCEP(cep);
     res.status(httpStatus.OK).send(address);
   } catch (error) {
     if (error.name === 'NotFoundError') {
       return res.send(httpStatus.NO_CONTENT);
-    } else if (error.name === 'InvalidCEP') {
-      return res.status(httpStatus.BAD_REQUEST).send({
-        message: error.message,
-      });
     }
   }
 }
