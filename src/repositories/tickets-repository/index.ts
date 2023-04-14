@@ -1,4 +1,3 @@
-import { TicketStatus } from '@prisma/client';
 import { prisma } from './../../config/database';
 
 async function getTicketTypes() {

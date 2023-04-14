@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import { CreateAddressParams } from './../repositories/address-repository/index';
 import { CardData } from '@/controllers';
 
 type CreatePaymentParams = {
