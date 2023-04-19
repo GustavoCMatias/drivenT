@@ -1,36 +1,41 @@
-import { prisma } from './../../config/database';
+import { Ticket, TicketStatus, TicketType } from '@prisma/client';
+import { prisma } from '@/config';
+import { CreateTicketParams } from '@/protocols';
 
-async function getTicketTypes() {
+async function findTicketTypes(): Promise<TicketType[]> {
   return prisma.ticketType.findMany();
 }
 
-async function getUserTicket(id: number) {
+async function findTicketByEnrollmentId(enrollmentId: number): Promise<Ticket> {
   return prisma.ticket.findFirst({
-    where: {
-      Enrollment: {
-        User: {
-          id,
-        },
-      },
-    },
-    select: {
-      id: true,
-      status: true,
-      ticketTypeId: true,
-      enrollmentId: true,
-      TicketType: true,
-      createdAt: true,
-      updatedAt: true,
+    where: { enrollmentId },
+    include: {
+      TicketType: true, //join
     },
   });
 }
 
-async function postTicket(ticketTypeId: number, enrollmentId: number) {
+async function createTicket(ticket: CreateTicketParams): Promise<Ticket> {
   return prisma.ticket.create({
-    data: {
-      ticketTypeId,
-      enrollmentId,
-      status: 'RESERVED',
+    data: ticket,
+  });
+}
+
+async function findTickeyById(ticketId: number): Promise<Ticket> {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
+      Enrollment: true,
+    },
+  });
+}
+
+async function findTickeWithTypeById(ticketId: number): Promise<Ticket> {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
     },
     include: {
       TicketType: true,
@@ -38,10 +43,22 @@ async function postTicket(ticketTypeId: number, enrollmentId: number) {
   });
 }
 
-const ticketsRepository = {
-  getTicketTypes,
-  getUserTicket,
-  postTicket,
-};
+async function ticketProcessPayment(ticketId: number): Promise<Ticket> {
+  return prisma.ticket.update({
+    where: {
+      id: ticketId,
+    },
+    data: {
+      status: TicketStatus.PAID,
+    },
+  });
+}
 
-export default ticketsRepository;
+export default {
+  findTicketTypes,
+  findTicketByEnrollmentId,
+  createTicket,
+  findTickeyById,
+  findTickeWithTypeById,
+  ticketProcessPayment,
+};
