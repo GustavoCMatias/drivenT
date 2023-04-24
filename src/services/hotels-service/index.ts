@@ -11,7 +11,9 @@ async function listHotel(userId: number) {
   // const hotel = await hotelsRepository.getHotelByUserId(userId);
   // if (!hotel) throw notFoundError;
 
-  return await hotelsRepository.listHotel();
+  const hotels = await hotelsRepository.listHotel();
+  if (hotels.length === 0) throw notFoundError;
+  return hotels;
 }
 
 async function getHotelRooms(hotelId: number, userId: number) {
