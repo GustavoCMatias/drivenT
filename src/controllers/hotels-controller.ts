@@ -16,7 +16,7 @@ export async function listHotel(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function getHotelRooms(req: AuthenticatedRequest, res: Response) {
-  const { hotelId } = req.query as Record<string, string>;
+  const { hotelId } = req.params as Record<string, string>;
   const userId = req.userId;
   try {
     const result = await hotelsService.getHotelRooms(Number(hotelId), userId);
