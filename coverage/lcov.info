@@ -120,7 +120,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/controllers/bookings-controller.ts
+SF:src/controllers/booking-controller.ts
 FN:6,getReservation
 FN:16,postReservation
 FN:27,updateReservation
@@ -1168,7 +1168,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:src/services/bookings-service/index.ts
+SF:src/services/booking-service/index.ts
 FN:7,getBookingByUserId
 FN:14,postBooking
 FN:31,updateBooking
